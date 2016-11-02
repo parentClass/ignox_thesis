@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <item android:title="Profile Settings">
+            <item
+                android:id="@+id/nav_change_pass"
+                android:icon="@drawable/passwordanother"
+                android:title="Change password" />
+            <item
+                android:id="@+id/nav_description"
+                android:icon="@drawable/meanother"
+                android:title="About you" />
+            <item
+                android:id="@+id/nav_interest"
+                android:icon="@drawable/interestanother"
+                android:title="Field of interest" />
+            <item
+                android:id="@+id/nav_signout"
+                android:icon="@drawable/signoutanother"
+                android:title="Sign out" />
+        </item>
+
+
+    <item android:title="Social Media">
+        <menu>
+            <item
+                android:id="@+id/nav_github"
+                android:icon="@drawable/githubanother"
+                android:title="Follow me on Github" />
+            <item
+                android:id="@+id/nav_googleplus"
+                android:icon="@drawable/googleplusanother"
+                android:title="Add me on Google+" />
+            <item
+                android:id="@+id/nav_facebook"
+                android:icon="@drawable/facebookanother"
+                android:title="Add me on Facebook" />
+            <item
+                android:id="@+id/nav_twitter"
+                android:icon="@drawable/twitteranother"
+                android:title="Follow me on Twitter" />
+            <item
+                android:id="@+id/nav_instagram"
+                android:icon="@drawable/instagramanother"
+                android:title="Follow me on Instagram" />
+        </menu>
+    </item>
+
+    <item android:title="Help us grow">
+        <menu>
+            <item
+                android:id="@+id/nav_feedback"
+                android:icon="@drawable/feedbackanother"
+                android:title="Send us feedbacks" />
+            <item
+                android:id="@+id/nav_report"
+                android:icon="@drawable/problemanother"
+                android:title="Report a problem" />
+        </menu>
+    </item>
+
+    <item android:title="Others">
+        <menu>
+            <item
+                android:id="@+id/nav_faq"
+                android:title="Frequently Asked Questions" />
+            <item
+                android:id="@+id/nav_aboutcreator"
+                android:title="About Creator" />
+            <item
+                android:id="@+id/nav_aboutapp"
+                android:title="About Ignox" />
+        </menu>
+    </item>
+
+</menu>

@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Ignox_thesis</string>
+    <string name="app_title">Ignox&#191;</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_dashboard"></string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="appSays_mine">\" Curiosity opens up many possibilities \n but takes a lot. \"</string>
+    <string name="appSays">\" If we knew what it was we were doing, it would not be called research, would it? \n\t\t\t - Albert Einstein \"</string>
+    <string name="appSays_two">\" Of what use are all the codes in the world,\nif by means of confidential reports, if for trifling reasons, if through anonymous traitors any honest citizen may be exiled or banished without a hearing, without a trial?
+                                        \n\t\t\t - Jose Rizal \"</string>
+    <string name="hint_name">Nickname</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_confirmpass">Confirm Password</string>
+    <string name="hint_expertise">Interest (ex. Pyschology,Artificial Intelligence,Architecture)</string>
+    <string name="hint_bio">Self Description</string>
+    <string name="btn_sign_up">Sign up</string>
+    <string name="err_msg_name">Enter your full name</string>
+    <string name="err_msg_email">Enter valid email address</string>
+    <string name="err_msg_password">Enter the password</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+</resources>
