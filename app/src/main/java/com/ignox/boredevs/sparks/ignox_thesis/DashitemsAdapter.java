@@ -1,6 +1,9 @@
 package com.ignox.boredevs.sparks.ignox_thesis;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Typeface;
+import android.renderscript.Type;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,6 +17,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 /**
@@ -26,16 +31,18 @@ public class DashitemsAdapter extends RecyclerView.Adapter<DashitemsAdapter.MyVi
     int pos;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView title;
+        public TextView title, subtxt;
         public ImageView thumbnail, overflow;
 
         public MyViewHolder(View view) {
             super(view);
             title = (TextView) view.findViewById(R.id.title);
+            subtxt = (TextView) view.findViewById(R.id.subtxt);
             thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
             overflow = (ImageView) view.findViewById(R.id.overflow);
 
-
+            title.setTypeface(Typeface.createFromAsset(mContext.getAssets(),"fonts/montserratbold.ttf"));
+            subtxt.setTypeface(Typeface.createFromAsset(mContext.getAssets(),"fonts/montserratbold.ttf"));
         }
     }
 
@@ -57,7 +64,7 @@ public class DashitemsAdapter extends RecyclerView.Adapter<DashitemsAdapter.MyVi
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         Dashitems dash = dashList.get(position);
         holder.title.setText(dash.getName());
-
+        holder.subtxt.setText(dash.getSubtxt());
         // loading album cover using Glide library
         Glide.with(mContext).load(dash.getThumbnail()).into(holder.thumbnail);
 
@@ -101,7 +108,19 @@ public class DashitemsAdapter extends RecyclerView.Adapter<DashitemsAdapter.MyVi
 
                     switch (pos){
                         case 0:
-
+                            Intent research = new Intent(mContext,ResearchActivity.class);
+                            research.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            mContext.startActivity(research);
+                            break;
+                        case 1:
+                            Intent topics = new Intent(mContext,TopicsActivity.class);
+                            topics.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            mContext.startActivity(topics);
+                            break;
+                        case 2:
+                            Intent headlines = new Intent(mContext,HeadlinesActivity.class);
+                            headlines.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            mContext.startActivity(headlines);
                             break;
                     }
 

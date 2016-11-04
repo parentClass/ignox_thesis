@@ -22,7 +22,7 @@
                 android:layout_height="@dimen/album_cover_height"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
-                android:scaleType="fitXY" />
+                android:scaleType="center" />
 
             <TextView
                 android:id="@+id/title"
@@ -33,17 +33,21 @@
                 android:paddingRight="@dimen/album_title_padding"
                 android:paddingTop="@dimen/album_title_padding"
                 android:textColor="@color/album_title"
-                android:textSize="@dimen/album_title" />
+                android:textSize="@dimen/album_title"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:textAlignment="center" />
 
             <TextView
-                android:id="@+id/count"
+                android:id="@+id/subtxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/title"
                 android:paddingBottom="@dimen/songs_count_padding_bottom"
                 android:paddingLeft="@dimen/album_title_padding"
                 android:paddingRight="@dimen/album_title_padding"
-                android:textSize="@dimen/songs_count" />
+                android:textSize="@dimen/songs_count"
+                android:textAlignment="center" />
 
             <ImageView
                 android:id="@+id/overflow"

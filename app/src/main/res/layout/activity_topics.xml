@@ -24,7 +24,8 @@
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
             app:expandedTitleTextAppearance="@android:color/transparent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            android:background="@null">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -36,7 +37,7 @@
                     android:layout_height="match_parent"
                     android:fitsSystemWindows="true"
                     android:scaleType="centerCrop"
-                    android:background="#004D40"
+                    android:background="@drawable/topic"
                     app:layout_collapseMode="parallax"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentLeft="true"
@@ -55,7 +56,7 @@
                         android:id="@+id/header"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Gnoxboard"
+                        android:text="Topics"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/backdrop_title" />
 
@@ -72,9 +73,5 @@
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
-
-
-
-    <include layout="@layout/content_main" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -1,6 +1,8 @@
 package com.ignox.boredevs.sparks.ignox_thesis;
 
+import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -89,7 +91,7 @@ public class Dashboard extends AppCompatActivity
         collapsingToolbar.setTitle(" ");
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
         appBarLayout.setExpanded(true);
-
+        getSupportActionBar().setElevation(0);
         // hiding & showing the title when toolbar expanded & collapsed
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             boolean isShow = false;
@@ -120,13 +122,13 @@ public class Dashboard extends AppCompatActivity
                 R.drawable.topics,
                 R.drawable.headlines};
 
-        Dashitems d = new Dashitems("Research", covers[0]);
+        Dashitems d = new Dashitems("Research", "Have a question and trying to look for more and deeper thought? Try to do some research by browsing this card!", covers[0]);
         dashitemsList.add(d);
 
-        d = new Dashitems("Topics", covers[1]);
+        d = new Dashitems("Topics", "Take a look at the topics library today to find out new information about your favorite subject matters! Try to do some knowledge exploration by browsing this card!", covers[1]);
         dashitemsList.add(d);
 
-        d = new Dashitems("Headlines", covers[2]);
+        d = new Dashitems("Headlines", "Be updated with the worlds current trend in different fields! Try to associate with the whole world by browsing this card!", covers[2]);
         dashitemsList.add(d);
 
         adapter.notifyDataSetChanged();
@@ -171,6 +173,32 @@ public class Dashboard extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+
+        switch(id){
+            case R.id.nav_github:
+                Uri uri = Uri.parse("https://github.com/parentClass/ignox"); // missing 'http://' will cause crashed
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+                break;
+            case R.id.nav_facebook:
+                Uri urif = Uri.parse("https://www.facebook.com/BoredStudentStudio"); // missing 'http://' will cause crashed
+                Intent intentf = new Intent(Intent.ACTION_VIEW, urif);
+                startActivity(intentf);
+                break;
+            case R.id.nav_twitter:
+                Uri urit = Uri.parse("https://twitter.com/kaligspark_bsds"); // missing 'http://' will cause crashed
+                Intent intentt = new Intent(Intent.ACTION_VIEW, urit);
+                startActivity(intentt);
+                break;
+            case R.id.nav_instagram:
+                Uri urii = Uri.parse("https://twitter.com/kaligspark_bsds"); // missing 'http://' will cause crashed
+                Intent intenti = new Intent(Intent.ACTION_VIEW, urii);
+                startActivity(intenti);
+                break;
+            case R.id.nav_signout:
+                Intent login = new Intent(Dashboard.this,Signin.class);
+                startActivity(login);
+        }
 
 //        if (id == R.id.nav_camera) {
 //            // Handle the camera action
