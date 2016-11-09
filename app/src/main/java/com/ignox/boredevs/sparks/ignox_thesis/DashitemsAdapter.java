@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.renderscript.Type;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -71,6 +73,7 @@ public class DashitemsAdapter extends RecyclerView.Adapter<DashitemsAdapter.MyVi
         holder.overflow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 pos = holder.getAdapterPosition();
                 showPopupMenu(holder.overflow);
             }
@@ -102,6 +105,7 @@ public class DashitemsAdapter extends RecyclerView.Adapter<DashitemsAdapter.MyVi
         public boolean onMenuItemClick(MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.action_add_favourite:
+
                     Toast.makeText(mContext, "Add to favourite", Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.action_play_next:

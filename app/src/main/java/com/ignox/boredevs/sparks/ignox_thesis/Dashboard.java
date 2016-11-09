@@ -1,7 +1,9 @@
 package com.ignox.boredevs.sparks.ignox_thesis;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -47,6 +49,12 @@ public class Dashboard extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setElevation(0);
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#00000000"));
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(" ");
+        actionBar.setBackgroundDrawable(colorDrawable);
 
         initCollapsingToolbar();
 
@@ -118,9 +126,10 @@ public class Dashboard extends AppCompatActivity
      */
     private void prepareDashItems() {
         int[] covers = new int[]{
-                R.drawable.research,
+                R.drawable.research_card,
                 R.drawable.topics,
-                R.drawable.headlines};
+                R.drawable.headline
+        };
 
         Dashitems d = new Dashitems("Research", "Have a question and trying to look for more and deeper thought? Try to do some research by browsing this card!", covers[0]);
         dashitemsList.add(d);

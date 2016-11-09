@@ -11,7 +11,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Splashscreen"
+            android:name=".Dashboard"
+            android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,10 +22,10 @@
         </activity>
         <activity android:name=".Signup" />
         <activity android:name=".Signin" />
-        <activity
-            android:name=".Dashboard"
-            android:label="@string/title_activity_dashboard"
-            android:theme="@style/AppTheme.NoActionBar" />
+        <!--<activity-->
+            <!--android:name=".Dashboard"-->
+            <!--android:label="@string/title_activity_dashboard"-->
+            <!--android:theme="@style/AppTheme.NoActionBar" />-->
         <activity android:name=".ResearchActivity" />
         <activity android:name=".TopicsActivity" />
         <activity android:name=".HeadlinesActivity"></activity>
