@@ -1,13 +1,16 @@
 package com.ignox.boredevs.sparks.ignox_thesis;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.StrictMode;
 import android.renderscript.Type;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -23,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.HttpAuthHandler;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -40,7 +44,12 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.w3c.dom.Text;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -53,6 +62,8 @@ import java.util.Set;
 public class HeadlinesActivity extends AppCompatActivity{
 
     private TextView header;
+    private String newsURL = "https://newsapi.org/v1/articles?source=techcrunch&apiKey=086ca0991dc44757902c3b7bb786d2e8";
+    private String type = "getNews";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +83,10 @@ public class HeadlinesActivity extends AppCompatActivity{
         header = (TextView)findViewById(R.id.header);
 
         header.setTypeface(Typeface.createFromAsset(getAssets(),"fonts/lobster.ttf"));
+
+        BackgroundWorker backgroundWorker = new BackgroundWorker(getApplicationContext());
+        String type = "getNews";
+        backgroundWorker.execute(type);
     }
 
     @Override

@@ -5,7 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.util.Log;
+import android.util.StringBuilderPrinter;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -18,7 +21,11 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.nio.Buffer;
+
+import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Created by daniel on 7/9/2016.
@@ -34,6 +41,9 @@ public class BackgroundWorker extends AsyncTask<String,Void,String> {
     String user_name;
     String user_pass;
     SharedPreferences sp;
+    String data = "";
+    String content = "";
+    String error;
 
     @Override
     protected String doInBackground(String... params) {
@@ -42,6 +52,7 @@ public class BackgroundWorker extends AsyncTask<String,Void,String> {
         String login_url = "http://actest.site40.net/ignox/login.php";
         String register_url = "http://actest.site40.net/ignox/register.php";
         String changepass_url = "http://actest.site40.net/ignox/changepass.php";
+        String newsapi_url = "https://newsapi.org/v1/articles?source=techcrunch&apiKey=086ca0991dc44757902c3b7bb786d2e8";
 
         if(type.equals("login")){
             try {
@@ -155,6 +166,39 @@ public class BackgroundWorker extends AsyncTask<String,Void,String> {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }else if(type.equals("getNews")){
+            process = "getnews";
+            HttpsURLConnection connection = null;
+            BufferedReader br = null;
+            try {
+               URL url = new URL(newsapi_url);
+                connection = (HttpsURLConnection)url.openConnection();
+                connection.connect();
+
+                InputStream stream = connection.getInputStream();
+
+                br = new BufferedReader(new InputStreamReader(stream));
+
+                StringBuffer buffer = new StringBuffer();
+
+                String line = "";
+                while((line = br.readLine()) != null){
+                    buffer.append(line);
+                }
+                content = buffer.toString();
+                return buffer.toString();
+            }
+            catch(Exception e) {
+                error = e.getMessage();
+                Log.e("ERROR", e.getMessage(), e);
+                return null;
+            }finally {
+                try{
+                    br.close();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
         }
 
 
@@ -214,6 +258,8 @@ public class BackgroundWorker extends AsyncTask<String,Void,String> {
                 }catch (Exception ex){
                     Toast.makeText(context.getApplicationContext(), "Connection timeout!",Toast.LENGTH_SHORT).show();
                 }
+            }else if(process.equals("getnews")){
+                Toast.makeText(context.getApplicationContext(), content, Toast.LENGTH_SHORT).show();
             }
         }catch (Exception ex){
 

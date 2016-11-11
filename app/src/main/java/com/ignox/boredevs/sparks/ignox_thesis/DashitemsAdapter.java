@@ -117,6 +117,7 @@ public class DashitemsAdapter extends RecyclerView.Adapter<DashitemsAdapter.MyVi
                             mContext.startActivity(research);
                             break;
                         case 1:
+
                             Intent topics = new Intent(mContext,TopicsActivity.class);
                             topics.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             mContext.startActivity(topics);
