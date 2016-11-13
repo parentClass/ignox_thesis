@@ -72,7 +72,7 @@ public class TopicsActivity extends AppCompatActivity{
         header = (TextView)findViewById(R.id.header);
 
 
-        header.setTypeface(Typeface.createFromAsset(getAssets(),"fonts/lobster.ttf"));
+        header.setTypeface(Typeface.createFromAsset(getAssets(),"fonts/oswaldreg.ttf"));
 
     }
 

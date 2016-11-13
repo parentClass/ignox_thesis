@@ -1,11 +1,16 @@
 package com.ignox.boredevs.sparks.ignox_thesis;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -13,6 +18,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -26,12 +34,30 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.GravityEnum;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class Dashboard extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -40,6 +66,8 @@ public class Dashboard extends AppCompatActivity
     private DashitemsAdapter adapter;
     private List<Dashitems> dashitemsList;
     private TextView header;
+
+    private SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,13 +78,18 @@ public class Dashboard extends AppCompatActivity
 
         getSupportActionBar().setElevation(0);
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#00000000"));
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#00FFFFFF"));
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(" ");
         actionBar.setBackgroundDrawable(colorDrawable);
 
+        actionBar.setElevation(0);
+        getSupportActionBar().setElevation(0);
+
         initCollapsingToolbar();
+
+        sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         header = (TextView)findViewById(R.id.header);
         header.setTypeface(Typeface.createFromAsset(getAssets(),"fonts/lobster.ttf"));
@@ -87,7 +120,9 @@ public class Dashboard extends AppCompatActivity
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
+
 
     /**
      * Initializing collapsing toolbar
@@ -126,9 +161,9 @@ public class Dashboard extends AppCompatActivity
      */
     private void prepareDashItems() {
         int[] covers = new int[]{
-                R.drawable.research_card,
-                R.drawable.topics,
-                R.drawable.headline
+                R.drawable.wirling,
+                R.drawable.sky_sunset,
+                R.drawable.spotlight
         };
 
         Dashitems d = new Dashitems("Research", "Have a question and trying to look for more and deeper thought? Try to do some research by browsing this card!", covers[0]);
@@ -185,9 +220,14 @@ public class Dashboard extends AppCompatActivity
 
         switch(id){
             case R.id.nav_github:
-                Uri uri = Uri.parse("https://github.com/parentClass/ignox"); // missing 'http://' will cause crashed
+                Uri uri = Uri.parse("https://github.com/parentClass/ignox_thesis"); // missing 'http://' will cause crashed
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
+                break;
+            case R.id.nav_googleplus:
+                Uri urig = Uri.parse("https://plus.google.com/u/0/110925621806740666167"); // missing 'http://' will cause crashed
+                Intent intentg = new Intent(Intent.ACTION_VIEW, urig);
+                startActivity(intentg);
                 break;
             case R.id.nav_facebook:
                 Uri urif = Uri.parse("https://www.facebook.com/BoredStudentStudio"); // missing 'http://' will cause crashed
@@ -200,31 +240,269 @@ public class Dashboard extends AppCompatActivity
                 startActivity(intentt);
                 break;
             case R.id.nav_instagram:
-                Uri urii = Uri.parse("https://twitter.com/kaligspark_bsds"); // missing 'http://' will cause crashed
+                Uri urii = Uri.parse("https://www.instagram.com/ddmachinelearning/?hl=en"); // missing 'http://' will cause crashed
                 Intent intenti = new Intent(Intent.ACTION_VIEW, urii);
                 startActivity(intenti);
                 break;
             case R.id.nav_signout:
                 Intent login = new Intent(Dashboard.this,Signin.class);
                 startActivity(login);
-        }
+                break;
+            case R.id.nav_change_pass:
+                showInputDialogCustomInvalidation();
+                break;
+            case R.id.nav_description:
+                new GetUserAbout().execute();
+                break;
+            case R.id.nav_interest:
+                new GetUserInterest().execute();
+                break;
 
-//        if (id == R.id.nav_camera) {
-//            // Handle the camera action
-//        } else if (id == R.id.nav_gallery) {
-//
-//        } else if (id == R.id.nav_slideshow) {
-//
-//        } else if (id == R.id.nav_manage) {
-//
-//        } else if (id == R.id.nav_share) {
-//
-//        } else if (id == R.id.nav_send) {
-//
-//        }
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void showInputDialogCustomInvalidation() {
+
+        new MaterialDialog.Builder(this)
+                .title("Change password")
+                .content("Type your new password!")
+                .inputType(InputType.TYPE_TEXT_VARIATION_PASSWORD |
+                        InputType.TYPE_NUMBER_VARIATION_PASSWORD|
+                        InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD)
+                .typeface("opensanslight.ttf","lato.ttf")
+                .buttonsGravity(GravityEnum.CENTER)
+                .positiveText("Submit")
+                .negativeText("Cancel")
+                .negativeColor(Color.parseColor("#FF5722"))
+                .positiveColor(Color.parseColor("#FF5722"))
+                .widgetColor(Color.parseColor("#FF5722"))
+                .input(R.string.emptyString, 0, false, new MaterialDialog.InputCallback() {
+
+                    @Override
+                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                        dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
+
+                        BackgroundWorker backgroundWorker = new BackgroundWorker(getApplication());
+                        backgroundWorker.execute("change_password",sp.getString("user_name",""),input.toString());
+                    }
+
+
+                }).show();
+    }
+
+    public void showAboutUserDialog(){
+
+        new MaterialDialog.Builder(this)
+                .title("About me!")
+                .content(sp.getString("user_about",""))
+                .typeface("opensanslight.ttf","lato.ttf")
+                .positiveText("Edit").positiveColor(Color.parseColor("#FF5722"))
+                .negativeText("Cancel").negativeColor(Color.parseColor("#FF5722"))
+                .buttonsGravity(GravityEnum.CENTER)
+                .titleGravity(GravityEnum.CENTER)
+                .contentGravity(GravityEnum.CENTER)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        showEditAboutUserDialog();
+                    }
+                })
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    public void showEditAboutUserDialog(){
+        new MaterialDialog.Builder(this)
+                .title("About me!")
+                .content("Tell us about yourself!")
+                .typeface("opensanslight.ttf","lato.ttf")
+                .positiveText("Submit")
+                .negativeText("Cancel")
+                .negativeColor(Color.parseColor("#FF5722"))
+                .positiveColor(Color.parseColor("#FF5722"))
+                .inputType(InputType.TYPE_TEXT_VARIATION_LONG_MESSAGE | InputType.TYPE_TEXT_FLAG_MULTI_LINE)
+                .widgetColor(Color.parseColor("#FF5722"))
+                .input(R.string.emptyString, R.string.emptyString, new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(MaterialDialog dialog, CharSequence input) {
+                        Snackbar.make(findViewById(android.R.id.content),"Bio updated!",Snackbar.LENGTH_SHORT).show();
+                        BackgroundWorker bgWorker = new BackgroundWorker(getApplication());
+                        bgWorker.execute("change_bio",sp.getString("user_name",""),input.toString());
+                    }
+                }).show();
+    }
+
+    public void showUserInterestsDialog(){
+        new MaterialDialog.Builder(this)
+                .title("Field of Interests!")
+                .content(sp.getString("user_interest",""))
+                .typeface("opensanslight.ttf","lato.ttf")
+                .positiveText("Edit").positiveColor(Color.parseColor("#FF5722"))
+                .negativeText("Cancel").negativeColor(Color.parseColor("#FF5722"))
+                .buttonsGravity(GravityEnum.CENTER)
+                .titleGravity(GravityEnum.CENTER)
+                .contentGravity(GravityEnum.CENTER)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        showEditInterestUserDialog();
+                    }
+                })
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    public void showEditInterestUserDialog(){
+        new MaterialDialog.Builder(this)
+                .title("Field of Interest!")
+                .content("Tell us what makes you curious!")
+                .typeface("opensanslight.ttf","lato.ttf")
+                .positiveText("Submit")
+                .negativeText("Cancel")
+                .negativeColor(Color.parseColor("#FF5722"))
+                .positiveColor(Color.parseColor("#FF5722"))
+                .inputType(InputType.TYPE_TEXT_VARIATION_LONG_MESSAGE | InputType.TYPE_TEXT_FLAG_MULTI_LINE)
+                .widgetColor(Color.parseColor("#FF5722"))
+                .input(R.string.emptyString, R.string.emptyString, new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(MaterialDialog dialog, CharSequence input) {
+                        Snackbar.make(findViewById(android.R.id.content),"Interests updated!",Snackbar.LENGTH_SHORT).show();
+                        BackgroundWorker bgWorker = new BackgroundWorker(getApplication());
+                        bgWorker.execute("change_interest",sp.getString("user_name",""),input.toString());
+                    }
+                }).show();
+    }
+
+    private class GetUserAbout extends AsyncTask<String,String,String>{
+
+        String content,error;
+        String retrieveabout_url = "http://actest.site40.net/ignox/retrieveabout.php";
+
+        SharedPreferences.Editor editor = sp.edit();
+
+        String user_name = sp.getString("user_name","");
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                URL url = new URL(retrieveabout_url);
+                HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                String post_data = URLEncoder.encode("user_name","UTF-8") + "=" + URLEncoder.encode(user_name,"UTF-8");
+                bufferedWriter.write(post_data);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
+                String result="";
+                String line="";
+                while((line = bufferedReader.readLine()) != null){
+                    result+=line;
+                }
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return result;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return content;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            JSONObject jsonResponse;
+            try{
+                jsonResponse = new JSONObject(s);
+                JSONArray jsonArray = jsonResponse.optJSONArray("result");
+                JSONObject obj = jsonArray.getJSONObject(0);
+                editor.putString("user_about",obj.getString("bio"));
+                editor.putString("user_interest",obj.getString("interests"));
+                editor.commit();
+                showAboutUserDialog();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class GetUserInterest extends AsyncTask<String,String,String>{
+
+        String content,error;
+        String retrieveabout_url = "http://actest.site40.net/ignox/retrieveabout.php";
+
+        SharedPreferences.Editor editor = sp.edit();
+
+        String user_name = sp.getString("user_name","");
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                URL url = new URL(retrieveabout_url);
+                HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                String post_data = URLEncoder.encode("user_name","UTF-8") + "=" + URLEncoder.encode(user_name,"UTF-8");
+                bufferedWriter.write(post_data);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
+                String result="";
+                String line="";
+                while((line = bufferedReader.readLine()) != null){
+                    result+=line;
+                }
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return result;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return content;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            JSONObject jsonResponse;
+            try{
+                jsonResponse = new JSONObject(s);
+                JSONArray jsonArray = jsonResponse.optJSONArray("result");
+                JSONObject obj = jsonArray.getJSONObject(0);
+                editor.putString("user_about",obj.getString("bio"));
+                editor.putString("user_interest",obj.getString("interests"));
+                editor.commit();
+                showUserInterestsDialog();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
     }
 }

@@ -63,7 +63,10 @@ public class ResearchActivity extends AppCompatActivity{
     private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.112 Safari/535.1";
     public List<String> titles = new LinkedList<String>();
     public List<String> links = new LinkedList<String>();
+    public List<String> desc = new LinkedList<String>();
+
     public String[] results = {};
+    public String[] descResult = {};
     public String[] Linkresults = {};
     public String[] combined = {};
     public boolean statusOK = false;
@@ -71,30 +74,29 @@ public class ResearchActivity extends AppCompatActivity{
     private static final int MAX_PAGES_TO_SEARCH = 10;
     private Set<String> pagesVisited = new HashSet<String>();
     private List<String> pagesToVisit = new LinkedList<String>();
-    private ListView lvResult;
+
+    private SearchResult sr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_research);
 
-        //getSupportActionBar().setElevation(0);
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#00000000"));
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(" ");
-        actionBar.setBackgroundDrawable(colorDrawable);
+
+
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#00FFFFFF"));
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setBackgroundDrawable(colorDrawable);
+        getSupportActionBar().setTitle(" ");
+
+        initCollapsingToolbar();
 
         header = (TextView)findViewById(R.id.header);
         fab = (FloatingActionButton)findViewById(R.id.fab);
-        lvResult = (ListView)findViewById(R.id.lvResults);
-
 
         srl = new ArrayList<>();
-        adapter = new SearchResultAdapter(srl);
+        adapter = new SearchResultAdapter(this,srl);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_list);
 
@@ -104,11 +106,16 @@ public class ResearchActivity extends AppCompatActivity{
         recyclerView.addItemDecoration(new DividerItemDecoration(this,LinearLayoutManager.VERTICAL));
         recyclerView.setAdapter(adapter);
 
-        header.setTypeface(Typeface.createFromAsset(getAssets(),"fonts/lobster.ttf"));
+
+
+        header.setTypeface(Typeface.createFromAsset(getAssets(),"fonts/oswaldreg.ttf"));
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                srl.clear();
+                srl.removeAll(srl);
+                for(int i = 0; i<srl.size();i++){srl.remove(i);}
                 showInputDialogCustomInvalidation();
             }
         });
@@ -126,16 +133,52 @@ public class ResearchActivity extends AppCompatActivity{
         }
     }
 
+    /**
+     * Initializing collapsing toolbar
+     * Will show and hide the toolbar title on scroll
+     */
+    private void initCollapsingToolbar() {
+        final CollapsingToolbarLayout collapsingToolbar =
+                (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        collapsingToolbar.setTitle(" ");
+        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
+        appBarLayout.setExpanded(true);
+
+        // hiding & showing the title when toolbar expanded & collapsed
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            boolean isShow = false;
+            int scrollRange = -1;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                }
+                if (scrollRange + verticalOffset == 0) {
+                    collapsingToolbar.setTitle(" ");
+                    isShow = true;
+                } else if (isShow) {
+                    collapsingToolbar.setTitle(" ");
+                    isShow = false;
+                }
+            }
+        });
+    }
+
     public void showInputDialogCustomInvalidation() {
 
         new MaterialDialog.Builder(this)
-                .title(R.string.input)
-                .content(R.string.input_content_custominvalidation)
+                .title("Gnoxsearch")
+                .content("Type your question's keyword!")
                 .inputType(InputType.TYPE_CLASS_TEXT |
                         InputType.TYPE_TEXT_VARIATION_PERSON_NAME |
                         InputType.TYPE_TEXT_FLAG_CAP_WORDS)
-                .positiveText("Submit")
-//                .alwaysCallInputCallback() // this forces the callback to be invoked with every input change
+                .typeface("opensanslight.ttf","lato.ttf")
+                .widgetColor(Color.parseColor("#FF5722"))
+                .positiveText("Ask")
+                .negativeText("Cancel")
+                .negativeColor(Color.parseColor("#FF5722"))
+                .positiveColor(Color.parseColor("#FF5722"))
                 .input(R.string.input_hint, 0, false, new MaterialDialog.InputCallback() {
 
                     @Override
@@ -157,12 +200,14 @@ public class ResearchActivity extends AppCompatActivity{
 
                             search(torcab,input.toString());
 
-                            Toast.makeText(ResearchActivity.this, "x", Toast.LENGTH_SHORT).show();
-                            //dialog.setContent(R.string.input_content_custominvalidation);
                             dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
 
                         }
+
+
                     }
+
+
                 }).show();
     }
 
@@ -188,9 +233,11 @@ public class ResearchActivity extends AppCompatActivity{
 
             Elements titlesOnPage = htmlDocument.select("div.serp > a[href] > h3.s_title");
             Elements linksOnPage = htmlDocument.select("div.serp > a[href]");
+            Elements descOnPage = htmlDocument.select("div.serp > p");
 
             System.out.println("Found (" + titlesOnPage.size() + ") links");
             System.out.println("Found (" + linksOnPage.size() + ") links");
+            System.out.println("Found (" + descOnPage.size() + ") links");
 
             for (org.jsoup.nodes.Element title : titlesOnPage) {
                 this.titles.add(title.html());
@@ -198,39 +245,30 @@ public class ResearchActivity extends AppCompatActivity{
             for (org.jsoup.nodes.Element link : linksOnPage) {
                 this.links.add(link.absUrl("href"));
             }
+            for (org.jsoup.nodes.Element desc : descOnPage) {
+                this.desc.add(Jsoup.parse(desc.html()).text());
+            }
+
             results = new String[titles.size()];
             Linkresults = new String[links.size()];
+            descResult = new String[desc.size()];
             combined = new String[links.size()];
-            for (int j = 0; j < titles.size(); j++) {
-                results[j] = titles.get(j).replaceAll("<[^>]*>", "").trim();
-                System.out.println(titles.get(j));
-            }for (int j = 0; j < links.size(); j++) {
-                Linkresults[j] = links.get(j).replaceAll("<[^>]*>", "").trim();
-                System.out.println(links.get(j));
-            }for (int j = 0; j < links.size(); j++) {
-                combined[j] = titles.get(j).replaceAll("<[^>]*>", "").trim(); //+ ":\n  " + links.get(j).replaceAll("<[^>]*>", "").trim();
-                System.out.println(combined[j]);
+
+            for (int j = 0; j < links.size(); j++) {
+
+                 sr = new SearchResult(
+                        titles.get(j).replaceAll("<[^>]*>", "").trim(), //title
+                         desc.get(j).replaceAll("<[^>]*>", "").trim(), //desc
+                        links.get(j).replaceAll("<[^>]*>", "").trim() //link
+
+                );
+
+                srl.add(sr);
 
             }
 
-            //final AnotherCustomListAdapter adapter = new AnotherCustomListAdapter(getActivity(),combined);
-            //final DeepResultListAdapter adapter = new DeepResultListAdapter(getActivity(),combined);
+            adapter.notifyDataSetChanged();
 
-           // List<String>srl = new ArrayList<String>(Arrays.asList(combined));
-
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,android.R.id.text1,combined);
-            lvResult.setAdapter(adapter);
-
-            lvResult.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                    Uri uri = Uri.parse(links.get(i)); // missing 'http://' will cause crashed
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    startActivity(intent);
-
-                }
-            });
 
 
             return true;

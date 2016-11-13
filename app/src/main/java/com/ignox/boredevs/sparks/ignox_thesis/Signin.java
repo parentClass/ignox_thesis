@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.renderscript.Type;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -26,7 +27,9 @@ public class Signin extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
 
-        //getSupportActionBar().setElevation(0);
+        getSupportActionBar().setTitle("Sign in!");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         btnLinkSignup = (Button) findViewById(R.id.btnLinkSignup);
         edtAlias = (EditText)findViewById(R.id.edtNick);
@@ -62,5 +65,16 @@ public class Signin extends AppCompatActivity {
                 backgroundWorker.execute(type,username,password);
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

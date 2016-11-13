@@ -19,15 +19,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Signup" />
-        <activity android:name=".Signin" />
+        <activity android:name=".Signup" android:screenOrientation="portrait"/>
+        <activity android:name=".Signin" android:screenOrientation="portrait"/>
+         <activity
+         android:name=".Dashboard"
+         android:label="@string/title_activity_dashboard"
+         android:theme="@style/AppTheme.NoActionBar"
+             android:screenOrientation="portrait"/>
+        <activity android:name=".ResearchActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".TopicsActivity" android:screenOrientation="portrait"/>
         <activity
-            android:name=".Dashboard"
-            android:label="@string/title_activity_dashboard"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ResearchActivity" />
-        <activity android:name=".TopicsActivity" />
-        <activity android:name=".HeadlinesActivity"></activity>
+            android:name=".HeadlinesActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".TopicsTabbed"
+            android:label="@string/title_activity_topics_tabbed"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

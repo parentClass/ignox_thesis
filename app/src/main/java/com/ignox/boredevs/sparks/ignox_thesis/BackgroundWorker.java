@@ -4,12 +4,20 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.util.StringBuilderPrinter;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -24,6 +32,9 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.Buffer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -31,6 +42,8 @@ import javax.net.ssl.HttpsURLConnection;
  * Created by daniel on 7/9/2016.
  */
 public class BackgroundWorker extends AsyncTask<String,Void,String> {
+
+    private View rootView;
 
     Context context;
     AlertDialog alertDialog;
@@ -52,7 +65,9 @@ public class BackgroundWorker extends AsyncTask<String,Void,String> {
         String login_url = "http://actest.site40.net/ignox/login.php";
         String register_url = "http://actest.site40.net/ignox/register.php";
         String changepass_url = "http://actest.site40.net/ignox/changepass.php";
-        String newsapi_url = "https://newsapi.org/v1/articles?source=techcrunch&apiKey=086ca0991dc44757902c3b7bb786d2e8";
+        String retrieveabout_url = "http://actest.site40.net/ignox/retrieveabout.php";
+        String changebio_url = "http://actest.site40.net/ignox/changebio.php";
+        String changeinterest_url = "http://actest.site40.net/ignox/changeinterest.php";
 
         if(type.equals("login")){
             try {
@@ -166,44 +181,82 @@ public class BackgroundWorker extends AsyncTask<String,Void,String> {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }else if(type.equals("getNews")){
-            process = "getnews";
-            HttpsURLConnection connection = null;
-            BufferedReader br = null;
+        }else if(type.equals("change_bio")){
             try {
-               URL url = new URL(newsapi_url);
-                connection = (HttpsURLConnection)url.openConnection();
-                connection.connect();
+                process = "change_bio"; // onPostExecute return identifier
+                String user_name = params[1];
+                String user_bio = params[2];
 
-                InputStream stream = connection.getInputStream();
+                URL url = new URL(changebio_url);
+                HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                String post_data =    URLEncoder.encode("user_name","UTF-8") + "=" + URLEncoder.encode(user_name,"UTF-8") + "&" //Nickname encoder
+                                      + URLEncoder.encode("user_bio","UTF-8") + "=" + URLEncoder.encode(user_bio,"UTF-8"); //Bio encoder
 
-                br = new BufferedReader(new InputStreamReader(stream));
-
-                StringBuffer buffer = new StringBuffer();
-
-                String line = "";
-                while((line = br.readLine()) != null){
-                    buffer.append(line);
+                bufferedWriter.write(post_data);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
+                String result="";
+                String line="";
+                while((line = bufferedReader.readLine()) != null){
+                    result+=line;
                 }
-                content = buffer.toString();
-                return buffer.toString();
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return result;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            catch(Exception e) {
-                error = e.getMessage();
-                Log.e("ERROR", e.getMessage(), e);
-                return null;
-            }finally {
-                try{
-                    br.close();
-                }catch (IOException e){
-                    e.printStackTrace();
+        }else if(type.equals("change_interest")){
+            try {
+                process = "change_interest"; // onPostExecute return identifier
+                String user_name = params[1];
+                String user_interests = params[2];
+
+                URL url = new URL(changeinterest_url);
+                HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                String post_data =    URLEncoder.encode("user_name","UTF-8") + "=" + URLEncoder.encode(user_name,"UTF-8") + "&" //Nickname encoder
+                        + URLEncoder.encode("user_interests","UTF-8") + "=" + URLEncoder.encode(user_interests,"UTF-8"); //Bio encoder
+
+                bufferedWriter.write(post_data);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
+                String result="";
+                String line="";
+                while((line = bufferedReader.readLine()) != null){
+                    result+=line;
                 }
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return result;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
-
-
         return null;
     }
+
 
     @Override
     protected void onPreExecute() {
@@ -251,18 +304,36 @@ public class BackgroundWorker extends AsyncTask<String,Void,String> {
             }else if(process.equals("change_password")){
                 try{
                     if(result.equals("1")){
-                        Toast.makeText(context.getApplicationContext(), "Password change success!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context.getApplicationContext(), "Password changed successfully!", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(context.getApplicationContext(), result, Toast.LENGTH_SHORT).show();
                     }
                 }catch (Exception ex){
                     Toast.makeText(context.getApplicationContext(), "Connection timeout!",Toast.LENGTH_SHORT).show();
                 }
-            }else if(process.equals("getnews")){
-                Toast.makeText(context.getApplicationContext(), content, Toast.LENGTH_SHORT).show();
+            }else if(process.equals("change_bio")){
+                try{
+                    if(result.equals("1")){
+                        Toast.makeText(context.getApplicationContext(), "Bio update success!", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(context.getApplicationContext(), "Bio update failed!", Toast.LENGTH_SHORT).show();
+                    }
+                }catch (Exception ex){
+                    Toast.makeText(context.getApplicationContext(), "Connection timeout!",Toast.LENGTH_SHORT).show();
+                }
+            }else if(process.equals("change_interest")){
+                try{
+                    if(result.equals("1")){
+                        Toast.makeText(context.getApplicationContext(), "Interests update success!", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(context.getApplicationContext(), "Interests update failed!", Toast.LENGTH_SHORT).show();
+                    }
+                }catch (Exception ex){
+                    Toast.makeText(context.getApplicationContext(), "Connection timeout!",Toast.LENGTH_SHORT).show();
+                }
             }
         }catch (Exception ex){
-
+            ex.printStackTrace();
         }
 
     }
