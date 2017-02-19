@@ -21,30 +21,30 @@
         </item>
 
 
-    <item android:title="Social Media">
-        <menu>
-            <item
-                android:id="@+id/nav_github"
-                android:icon="@drawable/githubanother"
-                android:title="Follow me on Github" />
-            <item
-                android:id="@+id/nav_googleplus"
-                android:icon="@drawable/googleplusanother"
-                android:title="Add me on Google+" />
-            <item
-                android:id="@+id/nav_facebook"
-                android:icon="@drawable/facebookanother"
-                android:title="Add me on Facebook" />
-            <item
-                android:id="@+id/nav_twitter"
-                android:icon="@drawable/twitteranother"
-                android:title="Follow me on Twitter" />
-            <item
-                android:id="@+id/nav_instagram"
-                android:icon="@drawable/instagramanother"
-                android:title="Follow me on Instagram" />
-        </menu>
-    </item>
+    <!--<item android:title="Social Media">-->
+        <!--<menu>-->
+            <!--<item-->
+                <!--android:id="@+id/nav_github"-->
+                <!--android:icon="@drawable/githubanother"-->
+                <!--android:title="Follow me on Github" />-->
+            <!--<item-->
+                <!--android:id="@+id/nav_googleplus"-->
+                <!--android:icon="@drawable/googleplusanother"-->
+                <!--android:title="Add me on Google+" />-->
+            <!--<item-->
+                <!--android:id="@+id/nav_facebook"-->
+                <!--android:icon="@drawable/facebookanother"-->
+                <!--android:title="Add me on Facebook" />-->
+            <!--<item-->
+                <!--android:id="@+id/nav_twitter"-->
+                <!--android:icon="@drawable/twitteranother"-->
+                <!--android:title="Follow me on Twitter" />-->
+            <!--<item-->
+                <!--android:id="@+id/nav_instagram"-->
+                <!--android:icon="@drawable/instagramanother"-->
+                <!--android:title="Follow me on Instagram" />-->
+        <!--</menu>-->
+    <!--</item>-->
 
     <item android:title="Help us grow">
         <menu>

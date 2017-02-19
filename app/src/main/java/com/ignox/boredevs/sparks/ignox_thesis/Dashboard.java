@@ -219,31 +219,31 @@ public class Dashboard extends AppCompatActivity
         int id = item.getItemId();
 
         switch(id){
-            case R.id.nav_github:
-                Uri uri = Uri.parse("https://github.com/parentClass/ignox_thesis"); // missing 'http://' will cause crashed
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-                break;
-            case R.id.nav_googleplus:
-                Uri urig = Uri.parse("https://plus.google.com/u/0/110925621806740666167"); // missing 'http://' will cause crashed
-                Intent intentg = new Intent(Intent.ACTION_VIEW, urig);
-                startActivity(intentg);
-                break;
-            case R.id.nav_facebook:
-                Uri urif = Uri.parse("https://www.facebook.com/BoredStudentStudio"); // missing 'http://' will cause crashed
-                Intent intentf = new Intent(Intent.ACTION_VIEW, urif);
-                startActivity(intentf);
-                break;
-            case R.id.nav_twitter:
-                Uri urit = Uri.parse("https://twitter.com/kaligspark_bsds"); // missing 'http://' will cause crashed
-                Intent intentt = new Intent(Intent.ACTION_VIEW, urit);
-                startActivity(intentt);
-                break;
-            case R.id.nav_instagram:
-                Uri urii = Uri.parse("https://www.instagram.com/ddmachinelearning/?hl=en"); // missing 'http://' will cause crashed
-                Intent intenti = new Intent(Intent.ACTION_VIEW, urii);
-                startActivity(intenti);
-                break;
+//            case R.id.nav_github:
+//                Uri uri = Uri.parse("https://github.com/parentClass/ignox_thesis"); // missing 'http://' will cause crashed
+//                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+//                startActivity(intent);
+//                break;
+//            case R.id.nav_googleplus:
+//                Uri urig = Uri.parse("https://plus.google.com/u/0/110925621806740666167"); // missing 'http://' will cause crashed
+//                Intent intentg = new Intent(Intent.ACTION_VIEW, urig);
+//                startActivity(intentg);
+//                break;
+//            case R.id.nav_facebook:
+//                Uri urif = Uri.parse("https://www.facebook.com/BoredStudentStudio"); // missing 'http://' will cause crashed
+//                Intent intentf = new Intent(Intent.ACTION_VIEW, urif);
+//                startActivity(intentf);
+//                break;
+//            case R.id.nav_twitter:
+//                Uri urit = Uri.parse("https://twitter.com/kaligspark_bsds"); // missing 'http://' will cause crashed
+//                Intent intentt = new Intent(Intent.ACTION_VIEW, urit);
+//                startActivity(intentt);
+//                break;
+//            case R.id.nav_instagram:
+//                Uri urii = Uri.parse("https://www.instagram.com/ddmachinelearning/?hl=en"); // missing 'http://' will cause crashed
+//                Intent intenti = new Intent(Intent.ACTION_VIEW, urii);
+//                startActivity(intenti);
+//                break;
             case R.id.nav_signout:
                 Intent login = new Intent(Dashboard.this,Signin.class);
                 startActivity(login);
