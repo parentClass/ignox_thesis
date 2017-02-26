@@ -3,6 +3,7 @@ package com.ignox.boredevs.sparks.ignox_thesis;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Movie;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
@@ -30,7 +31,9 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
             link = (TextView) view.findViewById(R.id.txtLink);
             desc = (TextView) view.findViewById(R.id.txtDesc);
 
-
+            title.setTypeface(Typeface.createFromAsset(ctx.getAssets(),"fonts/raleway_reg.ttf"));
+            link.setTypeface(Typeface.createFromAsset(ctx.getAssets(),"fonts/lato.ttf"));
+            desc.setTypeface(Typeface.createFromAsset(ctx.getAssets(),"fonts/lato.ttf"));
         }
 
     }
@@ -52,9 +55,11 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         final SearchResult result = searchResultList.get(position);
+
+
         holder.title.setText(result.getTitle());
         holder.link.setText(result.getLink());
-        holder.desc.setText(result.getDesc());
+        holder.desc.setText("\t\t\t" + result.getDesc());
 
         holder.title.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,5 +75,9 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
     @Override
     public int getItemCount() {
         return searchResultList.size();
+    }
+
+    private String capitalize(final String line) {
+        return Character.toUpperCase(line.charAt(0)) + line.substring(1);
     }
 }

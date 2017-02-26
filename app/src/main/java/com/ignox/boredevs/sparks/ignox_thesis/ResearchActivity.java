@@ -1,5 +1,6 @@
 package com.ignox.boredevs.sparks.ignox_thesis;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -90,7 +91,7 @@ public class ResearchActivity extends AppCompatActivity{
         getSupportActionBar().setBackgroundDrawable(colorDrawable);
         getSupportActionBar().setTitle(" ");
 
-        initCollapsingToolbar();
+        //initCollapsingToolbar();
 
         header = (TextView)findViewById(R.id.header);
         fab = (FloatingActionButton)findViewById(R.id.fab);
@@ -108,7 +109,7 @@ public class ResearchActivity extends AppCompatActivity{
 
 
 
-        header.setTypeface(Typeface.createFromAsset(getAssets(),"fonts/oswaldreg.ttf"));
+        //header.setTypeface(Typeface.createFromAsset(getAssets(),"fonts/oswaldreg.ttf"));
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,33 +138,33 @@ public class ResearchActivity extends AppCompatActivity{
      * Initializing collapsing toolbar
      * Will show and hide the toolbar title on scroll
      */
-    private void initCollapsingToolbar() {
-        final CollapsingToolbarLayout collapsingToolbar =
-                (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        collapsingToolbar.setTitle(" ");
-        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
-        appBarLayout.setExpanded(true);
-
-        // hiding & showing the title when toolbar expanded & collapsed
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            boolean isShow = false;
-            int scrollRange = -1;
-
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                if (scrollRange == -1) {
-                    scrollRange = appBarLayout.getTotalScrollRange();
-                }
-                if (scrollRange + verticalOffset == 0) {
-                    collapsingToolbar.setTitle(" ");
-                    isShow = true;
-                } else if (isShow) {
-                    collapsingToolbar.setTitle(" ");
-                    isShow = false;
-                }
-            }
-        });
-    }
+//    private void initCollapsingToolbar() {
+//        final CollapsingToolbarLayout collapsingToolbar =
+//                (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+//        collapsingToolbar.setTitle(" ");
+//        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
+//        appBarLayout.setExpanded(true);
+//
+//        // hiding & showing the title when toolbar expanded & collapsed
+//        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+//            boolean isShow = false;
+//            int scrollRange = -1;
+//
+//            @Override
+//            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+//                if (scrollRange == -1) {
+//                    scrollRange = appBarLayout.getTotalScrollRange();
+//                }
+//                if (scrollRange + verticalOffset == 0) {
+//                    collapsingToolbar.setTitle(" ");
+//                    isShow = true;
+//                } else if (isShow) {
+//                    collapsingToolbar.setTitle(" ");
+//                    isShow = false;
+//                }
+//            }
+//        });
+//    }
 
     public void showInputDialogCustomInvalidation() {
 
@@ -307,6 +308,7 @@ public class ResearchActivity extends AppCompatActivity{
 
     public void search(String url, String searchWord)
     {
+        Toast.makeText(this, "Searching ....", Toast.LENGTH_SHORT).show();
         while(this.pagesVisited.size() < MAX_PAGES_TO_SEARCH)
         {
             String currentUrl;
@@ -319,6 +321,7 @@ public class ResearchActivity extends AppCompatActivity{
             {
                 currentUrl = this.nextUrl();
             }
+
             crawl(currentUrl); // Lots of stuff happening here. Look at the crawl method in
 
             boolean success = searchForWord(searchWord);

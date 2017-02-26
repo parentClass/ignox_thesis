@@ -13,19 +13,13 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
     android:weightSum="1">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:src="@android:drawable/ic_menu_myplaces" />
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="28dp"
         android:id="@+id/abc"
         android:layout_weight="0.89"
         android:textAlignment="viewStart"
-        android:text="asdasdasd" />
+        android:text="Welcome!"
+        android:textStyle="normal|bold" />
 
 </LinearLayout>

@@ -35,13 +35,11 @@ public class Signin extends AppCompatActivity {
         edtAlias = (EditText)findViewById(R.id.edtNick);
         edtSecret = (EditText)findViewById(R.id.edtPassword);
         btnLogin = (Button)findViewById(R.id.btn_signin);
-        btnRetrieve = (Button)findViewById(R.id.btnRetrieve);
 
         edtAlias.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/opensanslight.ttf"));
         edtSecret.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/opensanslight.ttf"));
         btnLogin.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/lato.ttf"));
         btnLinkSignup.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/lato.ttf"));
-        btnRetrieve.setTypeface(Typeface.createFromAsset(getAssets(),"fonts/lato.ttf"));
 
         edtAlias.getBackground().clearColorFilter();
         edtSecret.getBackground().clearColorFilter();

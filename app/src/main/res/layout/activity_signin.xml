@@ -74,17 +74,6 @@
             android:textAllCaps="false"
             android:layout_gravity="center_horizontal" />
 
-        <Button
-            android:id="@+id/btnRetrieve"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Forgot your password? Retrieve it here"
-            android:background="#FBBC05"
-            android:layout_marginTop="10dp"
-            android:textColor="@android:color/white"
-            android:textAllCaps="false"
-            android:layout_gravity="center_horizontal" />
-
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

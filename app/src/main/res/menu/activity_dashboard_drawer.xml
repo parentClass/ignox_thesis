@@ -14,10 +14,15 @@
                 android:id="@+id/nav_interest"
                 android:icon="@drawable/interestanother"
                 android:title="Field of interest" />
-            <item
-                android:id="@+id/nav_signout"
-                android:icon="@drawable/signoutanother"
-                android:title="Sign out" />
+
+        </item>
+        <item android:title="Extras">
+            <menu>
+                <item
+                    android:id="@+id/nav_signout"
+                    android:icon="@drawable/signoutanother"
+                    android:title="Sign out" />
+            </menu>
         </item>
 
 
@@ -46,31 +51,31 @@
         <!--</menu>-->
     <!--</item>-->
 
-    <item android:title="Help us grow">
-        <menu>
-            <item
-                android:id="@+id/nav_feedback"
-                android:icon="@drawable/feedbackanother"
-                android:title="Send us feedbacks" />
-            <item
-                android:id="@+id/nav_report"
-                android:icon="@drawable/problemanother"
-                android:title="Report a problem" />
-        </menu>
-    </item>
+    <!--<item android:title="Help us grow">-->
+        <!--<menu>-->
+            <!--<item-->
+                <!--android:id="@+id/nav_feedback"-->
+                <!--android:icon="@drawable/feedbackanother"-->
+                <!--android:title="Send us feedbacks" />-->
+            <!--<item-->
+                <!--android:id="@+id/nav_report"-->
+                <!--android:icon="@drawable/problemanother"-->
+                <!--android:title="Report a problem" />-->
+        <!--</menu>-->
+    <!--</item>-->
 
-    <item android:title="Others">
-        <menu>
-            <item
-                android:id="@+id/nav_faq"
-                android:title="Frequently Asked Questions" />
-            <item
-                android:id="@+id/nav_aboutcreator"
-                android:title="About Creator" />
-            <item
-                android:id="@+id/nav_aboutapp"
-                android:title="About Ignox" />
-        </menu>
-    </item>
+    <!--<item android:title="Others">-->
+        <!--<menu>-->
+            <!--<item-->
+                <!--android:id="@+id/nav_faq"-->
+                <!--android:title="Frequently Asked Questions" />-->
+            <!--<item-->
+                <!--android:id="@+id/nav_aboutcreator"-->
+                <!--android:title="About Creator" />-->
+            <!--<item-->
+                <!--android:id="@+id/nav_aboutapp"-->
+                <!--android:title="About Ignox" />-->
+        <!--</menu>-->
+    <!--</item>-->
 
 </menu>
